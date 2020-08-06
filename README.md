@@ -143,7 +143,7 @@ constansMap:
 
 ## 5. 配置文件
 
-完整样例请看 [full-batch.yaml][example/src/main/resources/full-batch.yaml]
+完整样例请看 [full-batch.yaml](example/src/main/resources/full-batch.yaml)
 
 ### 5.1 整体结构
 
@@ -379,7 +379,7 @@ inputs:
 |type 值|说明 |
 |:----|:----|
 |sql|使用 SQL 处理数据|
-|custom| 硬编码处理数据，必须继承 com.hellowzk.light.spark.stages.custom.CustomBaseTransform 类，实现 doProcess 方法|
+|custom| 硬编码处理数据|
 
 ##### 5.3.1 使用 SQL 处理
 
