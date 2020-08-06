@@ -101,7 +101,7 @@ $cmd
 
 - 灵活的定义位置  
   自定义变量可以在 yaml 配置中，也可以定义在 class 类中，定义的变量名称必须唯一。   
-  定义在 class 中，例子 [MyConstants][example/src/main/scala/com/hellowzk/light/spark/MyConstants.scala]
+  定义在 class 中，例子 [MyConstants](example/src/main/scala/com/hellowzk/light/spark/MyConstants.scala)
   
 - 变量使用  
   - 在 yaml 中使用，可以直接通过 ${variable} 使用预定义的变量
@@ -289,7 +289,7 @@ inputs:
 
 ##### 5.2.4. 加载 customHdfs 数据
 自定义加载 customHdfs 的数据，生成表
-- 自定义加载逻辑类必须继承 com.hellowzk.light.spark.stages.custom.CustomBaseInput 特质，实现 process 方法，如 [Process1][example/src/main/scala/com/hellowzk/light/spark/stages/Process1.scala]
+- 自定义加载逻辑类必须继承 com.hellowzk.light.spark.stages.custom.CustomBaseInput 特质，实现 process 方法，如 [Process1](example/src/main/scala/com/hellowzk/light/spark/stages/Process1.scala)
 
 ###### 配置说明  
 
@@ -421,7 +421,7 @@ processes:
 ```
 
 ##### 5.3.2 自定义编码处理
-自定义处理类，必须继承 com.hellowzk.light.spark.stages.custom.CustomBaseTransform 类，实现 doProcess 方法，如 [Process2][example/src/main/scala/com/hellowzk/light/spark/stages/Process2.scala]
+自定义处理类，必须继承 com.hellowzk.light.spark.stages.custom.CustomBaseTransform 类，实现 doProcess 方法，如 [Process2](example/src/main/scala/com/hellowzk/light/spark/stages/Process2.scala)
 ###### 配置说明  
 
 | 配置项 | 默认值|是否必填 | 说明 |
