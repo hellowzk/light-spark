@@ -1,0 +1,180 @@
+%YAML 1.2
+---
+name: demo
+
+persistType: hive # hive hdfs
+persistDir: /tmp/spark/app/full-batch
+persistHiveDb: "${outputDB}"
+#enableShow: false # 是否允许 show，为 false 时，下面定义的 show 将不生效
+
+# 自定义常量类，可以在SQL path 中替换 ${} 中已定义的变量
+constansCls: com.hellowzk.light.spark.MyConstants
+
+constansMap:
+  appjdbcurl: "${jdbcurl}"
+  outputDB: zktest
+  inputDB: dw_test
+  today: "${DATE([yyyy-MM-dd, ${EVENT_DATE}, yyyyMMdd])}"
+  current: "${currentTimeLong}"
+
+# 自定义 udaf函数，可以在下面sql中使用
+udaf:
+  zkcount: com.hellowzk.light.spark.stages.udf.MySumUDF
+  udfb: com.hellowzk.light.spark.stages.udf.MySumUDF
+  udfc: com.hellowzk.light.spark.stages.udf.MySumUDF
+
+# 自定义 udf函数，可以在下面sql中使用
+udf:
+  - com.hellowzk.light.spark.stages.MyUDF
+
+inputs:
+  - name: person
+    type: classpathFile
+    columns: name,gen,age
+    path: person.txt
+    fs: ","
+
+  - name: custompersonClass
+    type: customClasspath
+    path: person2.txt
+    clazz: com.hellowzk.light.spark.stages.Process1
+
+  - name: person_hdfs
+    type: hdfsfile
+    columns: name,gen,age
+    path: /tmp/zhaokui/testdata/test/20200706/
+    fs: ","
+
+  - name: customPersonHdfs
+    type: customHdfs
+    path: /tmp/zhaokui/testdata/test/20200706/
+    clazz: com.hellowzk.light.spark.stages.Process1
+
+  - name: mysql1
+    type: jdbc
+    driver: "com.mysql.jdbc.Driver"
+    url: "${appjdbcurl}"
+    user: root
+    password: 123456
+    dbtable:
+      b_osp_app_event_detail: b_osp_app_event_detail
+      b_osp_app_area_analyze_total: b_osp_app_area_analyze_total
+
+  - name: hive1
+    type: hive
+    database: "${inputDB}"
+    dbtable:
+      dm_road_trackset_di: dm_road_trackset_di
+      dm_trackset_di: dm_trackset_di
+
+processes:
+  # sql 处理逻辑
+  - name: table1
+    sql: "select name, myudf1(name) as udfed, gen, age, '${DATE([yyyy-MM-dd, 2020-08-05][-3d])}' as dt from person"
+    cache: true # 出发action操作，缓存执行SQL后的表
+    store: true # 是否保存到本地，debug用，保存目录 $baseDir/{{EVENT_DATE}}/table
+    show: 20 # 在控制台打印表中数据，不打印则删除该节点，df.show(20)
+    partations: 3 # reparation 个数，不reparation则删除节点
+
+  # dimSql 处理逻辑
+  - name: table1_1
+    dimKey: "gen, age"
+    allPlaceholder: "ALL"
+    sql: "select name, ${DIM_FIELDS   }, count(1) as count from person group by name ${  DIM_GROUP  }"
+    cache: true # 出发action操作，缓存执行SQL后的表
+    store: true # 是否保存到本地，debug用，保存目录 $baseDir/{{EVENT_DATE}}/table
+    show: 20 # 在控制台打印表中数据，不打印则删除该节点，df.show(20)
+    partations: 3 # reparation 个数，不reparation则删除节点
+
+  - name: personClassshow
+    sql: "select * from custompersonClass"
+    cache: true
+    store: true
+    show: 20
+    partations: 1
+
+  - name: customPersonHdfsShow
+    sql: "select * from customPersonHdfs"
+    cache: true
+    store: true
+    show: 20
+    partations: 1
+
+  - name: table2
+    sql: "select zkcount(age) as count, gen, '${DATE([yyyy-MM-dd][-3d])}' as time from person_hdfs group by gen"
+    cache: true
+    store: true
+    show: 20
+    partations: 1
+  - name: customProcessShow
+    clazz: "com.hellowzk.light.spark.stages.Process2"
+    cache: true
+    store: true
+    show: 20
+    partations: 1
+  - name: table3
+    sql: "select project_id from b_osp_app_event_detail"
+    cache: true
+    store: true
+    show: 20
+    partations: 1
+
+  - name: table4
+    sql: "select * from b_osp_app_area_analyze_total"
+    cache: true
+    store: true
+    show: 20
+    partations: 1
+
+  - name: table5
+    sql: "select * from dm_road_trackset_di"
+    cache: true
+    store: true
+    show: 20
+    partations: 1
+
+  - name: table6
+    sql: "select * from dm_trackset_di"
+    cache: true
+    store: true
+    show: 20
+    partations: 1
+
+  - name: table7
+    clazz: "com.hellowzk.light.spark.stages.Process2"
+    cache: true
+    store: true
+    show: 20
+    partations: 1
+
+outputs:
+  - name: mysql1
+    type: jdbc
+    driver: "com.mysql.jdbc.Driver"
+    url: "${appjdbcurl}"
+    user: root
+    password: 123456
+    preSQL:
+      - delete from b_osp_app_event_detail
+      - delete from b_osp_app_area_analyze_total
+    tables:
+      table3: b_osp_app_event_detail
+      b_osp_app_area_analyze_total: b_osp_app_area_analyze_total
+
+  - name: hive_out1
+    type: hive
+    database: "${outputDB}"
+    tables:
+      dm_road_trackset_di: test_dm_road_trackset_di
+
+envs:
+  spark:
+    # spark参数
+    - spark.driver.memory=1g
+    - spark.driver.cores=1
+    - spark.executor.cores=1
+    - spark.executor.instances=1
+    - spark.executor.memory=1g
+    - spark.yarn.executor.memoryOverhead=1024
+    - spark.test.param=true
+    - spark.serializer=org.apache.spark.serializer.KryoSerializer

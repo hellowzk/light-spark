@@ -1,0 +1,15 @@
+%YAML 1.2
+---
+constansMap:
+  jdbcurl: "jdbc:mysql://<host>:3306/light_spark?useUnicode=true&characterEncoding=utf-8&useSSL=false"
+  outputDB: zktest_default
+  inputDB: dw_test
+  default_test: true
+
+envs:
+  spark:
+    # spark参数
+    - spark.driver.memory=512M
+    - spark.driver.cores=10
+    - spark.driver.default=10
+

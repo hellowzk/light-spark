@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+    <property>
+        <name>dfs.replication</name>
+        <value>2</value>
+    </property>
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>/mapbar/data/hadoop/namenode</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>/mapbar/data/hadoop/datanode</value>
+    </property>
+    <property>
+        <name>dfs.webhdfs.enabled</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>dfs.hosts.exclude</name>
+        <value>/mapbar/app/hadoop/hadoop-2.6.0-cdh5.13.0/etc/excludes</value>
+    </property>
+
+    <property>
+        <name>dfs.nameservices</name>
+        <value>mapbar-cdh</value>
+    </property>
+
+    <property>
+        <name>dfs.ha.namenodes.mapbar-cdh</name>
+        <value>namenode1,namenode2</value>
+    </property>
+
+    <property>
+        <name>dfs.namenode.rpc-address.mapbar-cdh.namenode1</name>
+        <value>namenode1:9000</value>
+    </property>
+
+    <property>
+        <name>dfs.namenode.http-address.mapbar-cdh.namenode1</name>
+        <value>namenode1:50070</value>
+    </property>
+
+    <property>
+        <name>dfs.namenode.rpc-address.mapbar-cdh.namenode2</name>
+        <value>namenode2:9000</value>
+    </property>
+
+    <property>
+        <name>dfs.namenode.http-address.mapbar-cdh.namenode2</name>
+        <value>namenode2:50070</value>
+    </property>
+
+    <property>
+        <name>dfs.ha.automatic-failover.enabled.mapbar-cdh</name>
+        <value>true</value>
+    </property>
+
+    <property>
+        <name>dfs.namenode.shared.edits.dir</name>
+        <value>qjournal://namenode1:8485;namenode2:8485;datanode1:8485/mapbar-cdh</value>
+    </property>
+
+    <property>
+        <name>dfs.journalnode.edits.dir</name>
+        <value>/mapbar/data/hadoop/journal</value>
+    </property>
+
+    <property>
+        <name>dfs.qjournal.write-txns.timeout.ms</name>
+        <value>200000</value>
+    </property>
+
+    <property>
+        <name>dfs.qjournal.start-segment.timeout.ms</name>
+        <value>200000</value>
+    </property>
+
+    <property>
+        <name>dfs.qjournal.prepare-recovery.timeout.ms</name>
+        <value>200000</value>
+    </property>
+
+    <property>
+        <name>dfs.qjournal.accept-recovery.timeout.ms</name>
+        <value>200000</value>
+    </property>
+
+    <property>
+        <name>dfs.qjournal.finalize-segment.timeout.ms</name>
+        <value>200000</value>
+    </property>
+
+    <property>
+        <name>dfs.qjournal.select-input-streams.timeout.ms</name>
+        <value>200000</value>
+    </property>
+
+    <property>
+        <name>dfs.qjournal.get-journal-state.timeout.ms</name>
+        <value>200000</value>
+    </property>
+
+    <property>
+        <name>dfs.qjournal.new-epoch.timeout.ms</name>
+        <value>200000</value>
+    </property>
+
+    <property>
+        <name>dfs.qjournal.write-txns.timeout.ms</name>
+        <value>200000</value>
+    </property>
+
+    <property>
+        <name>dfs.ha.fencing.methods</name>
+        <value>sshfence</value>
+    </property>
+
+    <property>
+        <name>dfs.ha.fencing.ssh.private-key-files</name>
+        <value>/home/hadoop/.ssh/id_rsa</value>
+    </property>
+
+    <property>
+        <name>dfs.client.failover.proxy.provider.mapbar-cdh</name>
+        <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+    </property>
+
+    <property>
+        <name>ha.zookeeper.session-timeout.ms</name>
+        <value>30000</value>
+    </property>
+
+    <property>
+        <name>dfs.permissions.enabled</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>dfs.namenode.acls.enabled</name>
+        <value>true</value>
+    </property>
+
+    <property>
+        <name>dfs.datanode.du.reserved</name>
+        <!--value>575235581542</value-->
+        <value>53687091200</value>
+    </property>
+    <property>
+        <name>dfs.datanode.max.transfer.threads</name>
+        <value>15000</value>
+    </property>
+    <property>
+        <name>dfs.datanode.socket.write.timeout</name>
+        <value>100000</value>
+    </property>
+
+    <property>
+        <name>dfs.client.read.shortcircuit</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>dfs.domain.socket.path</name>
+        <value>/mapbar/app/hadoop/hadoop-2.6.0-cdh5.13.0/dn._PORT</value>
+    </property>
+    <property>
+        <name>dfs.datanode.hdfs-blocks-metadata.enabled</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>dfs.client.use.legacy.blockreader.local</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir.perm</name>
+        <value>750</value>
+    </property>
+    <property>
+        <name>dfs.block.local-path-access.user</name>
+        <value>hadoop</value>
+    </property>
+    <property>
+        <name>dfs.client.file-block-storage-locations.timeout</name>
+        <value>3000</value>
+    </property>
+    <property>
+        <name>dfs.namenode.acls.enabled</name>
+        <value>true</value>
+    </property>
+</configuration>

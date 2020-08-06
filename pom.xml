@@ -1,0 +1,122 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.hellowzk.light.spark</groupId>
+    <artifactId>light-spark</artifactId>
+    <version>1.0.1-release</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>light-spark-core</module>
+        <module>assembly</module>
+        <module>example</module>
+    </modules>
+
+    <properties>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.encoding>${project.build.sourceEncoding}</java.encoding>
+        <java.version>1.8</java.version>
+        <scala.encoding>${project.build.sourceEncoding}</scala.encoding>
+        <scala.version.major>2.11</scala.version.major>
+        <scala.version>${scala.version.major}.12</scala.version>
+        <spark.version>2.2.3</spark.version>
+        <hbase.version>1.4.3</hbase.version>
+        <hadoop.version>2.6.0-cdh5.13.0</hadoop.version>
+        <druid.version>1.1.5</druid.version>
+        <spark.deploy.mode>cluster</spark.deploy.mode>
+        <app.build.profile.id></app.build.profile.id>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>sh</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>conf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>json</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>txt</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jvmArgs>
+                        <jvmArg>-Xms64m</jvmArg>
+                        <!--可以在测试环境修改为1024m,提交时为2048m-->
+                        <!--<jvmArg>-Xmx1024m</jvmArg>-->
+                        <jvmArg>-Xmx2048m</jvmArg>
+                    </jvmArgs>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                    <args>
+                        <arg>-target:jvm-${java.version}</arg>
+                    </args>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.17</version>
+                <configuration>
+                    <additionalClasspathElements>
+                        <additionalClasspathElement>${project.build.directory}/conf</additionalClasspathElement>
+                        <additionalClasspathElement>${project.build.directory}/conf-test
+                        </additionalClasspathElement>
+                    </additionalClasspathElements>
+                </configuration>
+            </plugin>
+
+        </plugins>
+
+    </build>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <app.build.profile.id>dev</app.build.profile.id>
+            </properties>
+        </profile>
+    </profiles>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>nexus-releases</name>
+            <url>http://192.168.1.3:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>user snapshot reap</name>
+            <url>http://192.168.1.3:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+</project>
