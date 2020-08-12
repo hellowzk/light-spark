@@ -143,7 +143,8 @@ constansMap:
 
 ## 5. 配置文件
 
-完整样例请看 [full-batch.yaml](example/src/main/resources/full-batch.yaml)
+- 支持统一默认变量配置[default-config.yaml](example/src/main/resources/default-config.yaml)，优先级最低
+- 完整样例请看 [full-batch.yaml](example/src/main/resources/full-batch.yaml)
 
 ### 5.1 整体结构
 
