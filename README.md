@@ -31,51 +31,45 @@ Light-Spark 开发脚架
 ![yaml4](img/yaml4.png)
 
 ## 4. 使用
-**启动脚本样例**
-```shell script
-#!/usr/bin/env bash
-set -e
-umask 0000
 
-APP_HOME="$(cd $(dirname $0)/..; pwd -P)"
-ROOT_PATH="$(cd $APP_HOME/..; pwd -P)"
-currentTime=`date '+%Y-%m-%d_%H-%M-%S'`
-
-if [ $# -eq 1 ];then
-  params="-c qujia_prd.yaml -d $1"
-elif [ $# -eq 2 ];then
-  params="-c $2 -d $1"
-# debug 
-# params="-c $2 -d $1 --debug"
-else
-  echo "useage: $0 <date-yyyyMMdd> <conf>"
-  exit 1
-fi
-STREAM_APP="com.hellowzk.light.spark.App" # 程序入口
-echo "__________________________ light-spark start __________________________"
-
-CLASSPATH="$APP_HOME/conf"
-
-confList=`find $APP_HOME/conf/ -type f|sed ':a;N;s/\n/,/;ta;'` # 扫描目录下所有配置信息
-APP_JAR="light-spark-assembly.jar" # 指定 jar 包名称
-cmd="spark-submit"
-cmd="$cmd --master yarn --deploy-mode cluster"
-cmd="$cmd --files $confList"
-cmd="$cmd --conf spark.app.name=light-spark-$1" # 指定 hadoop 应用名称
-cmd="$cmd --conf spark.driver.extraClassPath=$CLASSPATH"
-cmd="$cmd --conf spark.yarn.submit.waitAppCompletion=false"
-cmd="$cmd --class $STREAM_APP $APP_HOME/lib/$APP_JAR $params"
-
-echo "command to execute $0: $cmd" # > $APP_HOME/log/light-spark-$1.log
-$cmd
+### 4.1 maven 引用
+本项目已发布到 maven 中央仓库，暂时支持 Spark2.2.x、Spark 2.3.x、Spark 2.4.x
+#### 针对 Spark 2.2.x
+```xml
+<dependency>
+    <groupId>com.github.hellowzk</groupId>
+    <artifactId>light-spark-core_2.2</artifactId>
+    <version>1.0.2-release</version>
+</dependency>
 ```
+#### 针对 Spark 2.3.x
+```xml
+<dependency>
+    <groupId>com.github.hellowzk</groupId>
+    <artifactId>light-spark-core_2.3</artifactId>
+    <version>1.0.2-release</version>
+</dependency>
+```
+#### 针对 Spark 2.4.x
+```xml
+<dependency>
+    <groupId>com.github.hellowzk</groupId>
+    <artifactId>light-spark-core_2.4</artifactId>
+    <version>1.0.2-release</version>
+</dependency>
+```
+### 4.2 依赖配置
+参考 [pom 文件](example/pom.xml)
 
-### 4.2 组件
+### 4.3 启动脚本样例
+参考 [run](example/src/bin/run.sh)
 
-#### 4.2.1 debug 开发工具
+### 4.4 组件
+
+#### 4.4.1 debug 开发工具
 开发过程中，可以通过配置，自动把指定步骤的结果持久化存储，支持 hdfs csv、hive 表
 
-#### 4.2.2 input - 数据加载
+#### 4.4.2 input - 数据加载
 
 1. 支持读取 hive 数据；
 2. 支持读取 hdfs 数据，配置中定义好字段信息后自动加载成表；
@@ -83,20 +77,20 @@ $cmd
 4. 支持数据源类型比较复杂时，支持 自定义 处理源数据为表；
 5. 支持读取 JDBC 的源数据，jdbcOpts 中参数请看 SparkSQL[官方文档][spark2.2.0]；
 
-#### 4.2.3 process - 业务计算
+#### 4.4.3 process - 业务计算
 
 1. 支持 SparkSQL 处理。
 2. 处理逻辑较复杂，SQL 叫难实现时，支持硬编码实现业务需求。
 
-#### 4.2.4 output - 结果保存
+#### 4.4.4 output - 结果保存
 
 1. 存储到 HDFS ，格式可以选择为 txt / lzo 。
 2. 存储到 HIVE 。
 3. 存储到支持 JDBC 的数据库。 
 
-#### 4.2.5 变量
+#### 4.4.5 变量
 
-##### 4.2.5.1 定义及使用
+##### 4.4.5.1 定义及使用
 本框架支持在配置中自定义及使用变量，支持变量嵌套使用
 
 - 灵活的定义位置  
@@ -113,7 +107,7 @@ $cmd
    ```
    所有可用变量存放在 AppConstants.variables 中
   
-##### 4.2.5.2 日期表达式
+##### 4.4.5.2 日期表达式
 支持通过日期表达式定义日期，表达式格式为
 ```shell script
 DATE([yyyy-MM-dd, 20200722, yyyyMMdd][+3d][-1m][+1y]...)
