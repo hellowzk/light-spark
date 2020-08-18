@@ -2,14 +2,50 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>light-spark</artifactId>
-        <groupId>com.github.hellowzk</groupId>
-        <version>1.0.1-release</version>
-    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>light-spark-core</artifactId>
+    <groupId>com.github.hellowzk</groupId>
+    <artifactId>light-spark-core_2.4</artifactId>
+	<name>Light Spark</name>
+    <version>1.0.2-release</version>
+
+    <url>https://github.com/hellowzk/light-spark</url>
+    <description>Easy to use Apache Spark</description>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/hellowzk/light-spark</url>
+        <connection>https://github.com/hellowzk/light-spark.git</connection>
+    </scm>
+    <developers>
+        <developer>
+            <name>zhaokui</name>
+            <id>zhaokui</id>
+            <email>zhaokui_1990@163.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+    <properties>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.encoding>${project.build.sourceEncoding}</java.encoding>
+        <java.version>1.8</java.version>
+        <scala.encoding>${project.build.sourceEncoding}</scala.encoding>
+        <scala.version.major>2.11</scala.version.major>
+        <scala.version>${scala.version.major}.12</scala.version>
+        <spark.version.pre>2.2</spark.version.pre>
+        <spark.version>${spark.version.pre}.3</spark.version>
+        <hbase.version>1.4.3</hbase.version>
+        <hadoop.version>2.6.0-cdh5.13.0</hadoop.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -181,6 +217,7 @@
             <version>4.4</version>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -197,6 +234,143 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>sh</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>conf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>json</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>txt</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jvmArgs>
+                        <jvmArg>-Xms64m</jvmArg>
+                        <!--可以在测试环境修改为1024m,提交时为2048m-->
+                        <!--<jvmArg>-Xmx1024m</jvmArg>-->
+                        <jvmArg>-Xmx2048m</jvmArg>
+                    </jvmArgs>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                    <args>
+                        <arg>-target:jvm-${java.version}</arg>
+                    </args>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--生成java源码包插件（仅对java有用，对scala不管用） source-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+
     </build>
+
+    <profiles>
+        <profile>
+            <id>spark2.2</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spark.version.pre>2.2</spark.version.pre>
+            </properties>
+        </profile>
+        <profile>
+            <id>spark2.3</id>
+            <properties>
+                <spark.version.pre>2.3</spark.version.pre>
+            </properties>
+        </profile>
+        <profile>
+            <id>spark2.4</id>
+            <properties>
+                <spark.version.pre>2.4</spark.version.pre>
+            </properties>
+        </profile>
+    </profiles>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 </project>

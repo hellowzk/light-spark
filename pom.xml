@@ -6,8 +6,13 @@
     <artifactId>light-spark</artifactId>
     <version>1.0.1-release</version>
     <packaging>pom</packaging>
-
+    <!--<parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>-->
     <modules>
+
         <module>light-spark-core</module>
         <module>assembly</module>
         <module>example</module>
@@ -21,10 +26,10 @@
         <scala.encoding>${project.build.sourceEncoding}</scala.encoding>
         <scala.version.major>2.11</scala.version.major>
         <scala.version>${scala.version.major}.12</scala.version>
-        <spark.version>2.2.3</spark.version>
+        <spark.version.pre>2.2</spark.version.pre>
+        <spark.version>${spark.version.pre}.3</spark.version>
         <hbase.version>1.4.3</hbase.version>
         <hadoop.version>2.6.0-cdh5.13.0</hadoop.version>
-        <druid.version>1.1.5</druid.version>
         <spark.deploy.mode>cluster</spark.deploy.mode>
         <app.build.profile.id></app.build.profile.id>
     </properties>
@@ -62,8 +67,17 @@
                 <version>3.2.1</version>
                 <executions>
                     <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
                         <goals>
+                            <goal>add-source</goal>
                             <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
                             <goal>testCompile</goal>
                         </goals>
                     </execution>
@@ -82,22 +96,38 @@
                 </configuration>
             </plugin>
 
+            <!--生成javadoc包的插件-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.17</version>
-                <configuration>
-                    <additionalClasspathElements>
-                        <additionalClasspathElement>${project.build.directory}/conf</additionalClasspathElement>
-                        <additionalClasspathElement>${project.build.directory}/conf-test
-                        </additionalClasspathElement>
-                    </additionalClasspathElements>
-                </configuration>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
-
+            <!--生成java源码包插件（仅对java有用，对scala不管用） source-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
 
     </build>
+
     <profiles>
         <profile>
             <id>dev</id>
@@ -105,18 +135,37 @@
                 <app.build.profile.id>dev</app.build.profile.id>
             </properties>
         </profile>
+        <profile>
+            <id>spark2.2</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spark.version.pre>2.2</spark.version.pre>
+            </properties>
+        </profile>
+        <profile>
+            <id>spark2.3</id>
+            <properties>
+                <spark.version.pre>2.3</spark.version.pre>
+            </properties>
+        </profile>
+        <profile>
+            <id>spark2.4</id>
+            <properties>
+                <spark.version.pre>2.4</spark.version.pre>
+            </properties>
+        </profile>
     </profiles>
 
     <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <name>nexus-releases</name>
-            <url>http://192.168.1.3:8081/repository/maven-releases/</url>
-        </repository>
         <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <name>user snapshot reap</name>
-            <url>http://192.168.1.3:8081/repository/maven-snapshots/</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
     </distributionManagement>
 </project>

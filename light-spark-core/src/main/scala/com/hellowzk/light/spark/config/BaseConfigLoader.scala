@@ -5,7 +5,6 @@ import com.typesafe.config.Config
 
 /**
  * @author zhaokui
- * @date 2019/11/19 14:45
  */
 abstract class BaseConfigLoader(optionsParser: Array[String] => Config) extends Logging {
   private var optionsConfig: Config = _

@@ -9,7 +9,6 @@ import scala.collection.JavaConverters._
 
 /**
  * @author zhaokui
- * @date 2019/11/19 14:55
  */
 case class Options(
                     date: String = "",

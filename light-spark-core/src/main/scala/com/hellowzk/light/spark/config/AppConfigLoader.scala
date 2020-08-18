@@ -219,7 +219,7 @@ object AppConfigLoader extends ConfigLoader {
   }
 
   /**
-   * 替换配置文件中 ${xxx} 可替换的值
+   * 替换配置文件中 变量表达式 可替换的值
    *
    * @param template  template
    * @param variables variables

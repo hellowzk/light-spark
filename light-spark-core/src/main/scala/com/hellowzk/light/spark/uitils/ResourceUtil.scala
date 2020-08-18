@@ -6,8 +6,7 @@ import org.apache.commons.lang3.StringUtils
 
 /**
  * @author zhaokui
- * @date 2019/11/19 15:06
- */
+ **/
 object ResourceUtil {
   def apply: ResourceUtil = new ResourceUtil()
 }

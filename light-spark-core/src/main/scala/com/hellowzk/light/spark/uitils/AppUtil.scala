@@ -173,10 +173,10 @@ object AppUtil extends Logging {
   }
 
   /**
-   * 获取变量，找出字符串中 ${xxx}
+   * 获取变量，找出字符串中 变量表达式
    *
    * @param str
-   * @return map(${xxx}, xxx)
+   * @return map(变量表达式, xxx)
    */
   def getVariableExprMap(str: String): Map[String, String] = {
     getVariableExprList(str).map(str => (str, str.substring(2, str.length - 1).trim)).toMap
@@ -201,10 +201,10 @@ object AppUtil extends Logging {
   }
 
   /**
-   * 获取变量，找出字符串中 ${xxx}
+   * 获取变量，找出字符串中 变量表达式
    *
    * @param str
-   * @return List(${xxx})
+   * @return List(变量表达式)
    */
   def getVariableExprList(str: String): List[String] = {
     val dropBlankStr = formatVariableStr(str)

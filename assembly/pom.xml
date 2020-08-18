@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>light-spark-core</artifactId>
+            <artifactId>light-spark-core_${spark.version.pre}</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
