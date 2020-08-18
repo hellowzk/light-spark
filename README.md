@@ -33,7 +33,7 @@ Light-Spark 开发脚架
 ## 4. 使用
 
 ### 4.1 maven 引用
-本项目已发布到 maven 中央仓库，暂时支持 Spark2.2.x、Spark 2.3.x、Spark 2.4.x
+本项目已发布到 maven 中央仓库，暂时支持 Spark 2.2.x、Spark 2.3.x、Spark 2.4.x
 #### 针对 Spark 2.2.x
 ```xml
 <dependency>
