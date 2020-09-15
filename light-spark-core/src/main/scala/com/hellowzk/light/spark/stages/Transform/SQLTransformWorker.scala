@@ -34,8 +34,8 @@ class SQLTransformWorker extends BaseWorker {
     var sql = process.sql
     if (StringUtils.isNotBlank(process.dimKey)) {
       sql = getDimSQLs(process.sql, process.dimKey, process.allPlaceholder).mkString(" union all ")
-      logger.info(s"final sql: $sql")
     }
+    logger.info(s"sql script:${System.lineSeparator()}$sql")
     ss.sql(sql).createOrReplaceTempView(process.name)
     afterProcess(process)
   }

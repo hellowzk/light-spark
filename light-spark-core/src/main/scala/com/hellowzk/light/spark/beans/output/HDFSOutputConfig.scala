@@ -22,7 +22,7 @@ class HDFSOutputConfig extends BaseOutputConfig {
   @BeanProperty
   var path: String = _
   @BeanProperty
-  var fs: String = _
+  var fs: String = "\u0001"
   @BeanProperty
   var srcName: String = _
 

@@ -7,7 +7,7 @@
     <groupId>com.github.hellowzk</groupId>
     <artifactId>light-spark-core_2.4</artifactId>
 	<name>Light Spark</name>
-    <version>1.0.2-release</version>
+    <version>1.0.3-release</version>
 
     <url>https://github.com/hellowzk/light-spark</url>
     <description>Easy to use Apache Spark</description>

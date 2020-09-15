@@ -50,15 +50,15 @@ inputs:
     path: /tmp/zhaokui/testdata/test/20200706/
     clazz: com.hellowzk.light.spark.stages.Process1
 
-  - name: mysql1
-    type: jdbc
-    driver: "com.mysql.jdbc.Driver"
-    url: "${appjdbcurl}"
-    user: root
-    password: 123456
-    dbtable:
-      b_osp_app_event_detail: b_osp_app_event_detail
-      b_osp_app_area_analyze_total: b_osp_app_area_analyze_total
+#  - name: mysql1
+#    type: jdbc
+#    driver: "com.mysql.jdbc.Driver"
+#    url: "${appjdbcurl}"
+#    user: root
+#    password: 123456
+#    dbtable:
+#      b_osp_app_event_detail: b_osp_app_event_detail
+#      b_osp_app_area_analyze_total: b_osp_app_area_analyze_total
 
   - name: hive1
     type: hive
@@ -112,19 +112,19 @@ processes:
     store: true
     show: 20
     partations: 1
-  - name: table3
-    sql: "select project_id from b_osp_app_event_detail"
-    cache: true
-    store: true
-    show: 20
-    partations: 1
+#  - name: table3
+#    sql: "select project_id from b_osp_app_event_detail"
+#    cache: true
+#    store: true
+#    show: 20
+#    partations: 1
 
-  - name: table4
-    sql: "select * from b_osp_app_area_analyze_total"
-    cache: true
-    store: true
-    show: 20
-    partations: 1
+#  - name: table4
+#    sql: "select * from b_osp_app_area_analyze_total"
+#    cache: true
+#    store: true
+#    show: 20
+#    partations: 1
 
   - name: table5
     sql: "select * from dm_road_trackset_di"
@@ -148,18 +148,50 @@ processes:
     partations: 1
 
 outputs:
-  - name: mysql1
-    type: jdbc
-    driver: "com.mysql.jdbc.Driver"
-    url: "${appjdbcurl}"
-    user: root
-    password: 123456
-    preSQL:
-      - delete from b_osp_app_event_detail
-      - delete from b_osp_app_area_analyze_total
-    tables:
-      table3: b_osp_app_event_detail
-      b_osp_app_area_analyze_total: b_osp_app_area_analyze_total
+#  - name: mysql1
+#    type: jdbc
+#    driver: "com.mysql.jdbc.Driver"
+#    url: "${appjdbcurl}"
+#    user: root
+#    password: 123456
+#    preSQL:
+#      - delete from b_osp_app_event_detail
+#      - delete from b_osp_app_area_analyze_total
+#    tables:
+#      table3: b_osp_app_event_detail
+#      b_osp_app_area_analyze_total: b_osp_app_area_analyze_total
+  - name: out1
+    type: hdfsfile
+    srcName: dm_road_trackset_di
+    format: csv # 保存为 csv
+    path: /user/osp/data/csv/${EVENT_DATE}
+
+  - name: out2
+    type: hdfsfile
+    srcName: dm_road_trackset_di
+    format: txt # 保存为 txt，字段用逗号分隔
+    fs: ","
+    path: /user/osp/data/txt/${EVENT_DATE}
+
+#  - name: out3
+#    type: hdfsfile
+#    srcName: dm_road_trackset_di
+#    format: lzo # 保存为 lzo，字段用逗号分隔
+#    fs: ","
+#    path: /user/osp/data/out3/${EVENT_DATE}
+
+  - name: out4
+    type: hdfsfile
+    srcName: dm_road_trackset_di
+    format: json # 保存为 json
+    path: /user/osp/data/json/${EVENT_DATE}
+
+  - name: out5
+    type: hdfsfile
+    srcName: dm_road_trackset_di
+    format: parquet # 保存为 parquet
+    fs: ","
+    path: /user/osp/data/parquet/${EVENT_DATE}
 
   - name: hive_out1
     type: hive

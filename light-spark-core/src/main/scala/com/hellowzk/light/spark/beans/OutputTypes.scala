@@ -1,4 +1,5 @@
 package com.hellowzk.light.spark.beans
+
 /**
  * <p>
  * 日期： 2020/5/19
@@ -14,5 +15,5 @@ package com.hellowzk.light.spark.beans
  **/
 object OutputTypes extends Enumeration {
   type OutputType = Value
-  val kafkaJson, kafkaField, hdfscsv, hdfsfile, hive, jdbc = Value
+  val kafkaJson, kafkaField, hdfsfile, hive, jdbc = Value
 }

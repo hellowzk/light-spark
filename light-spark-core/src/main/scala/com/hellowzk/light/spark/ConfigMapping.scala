@@ -38,7 +38,8 @@ object ConfigMapping {
   val outputBeans = Map(OutputTypes.hive.toString -> classOf[HiveOutputConfig],
     OutputTypes.jdbc.toString -> classOf[JDBCOutputConfig],
     OutputTypes.kafkaField.toString -> classOf[KafkaFieldOutputConfig],
-    OutputTypes.kafkaJson.toString -> classOf[KafkaJsonOutputConfig]
+    OutputTypes.kafkaJson.toString -> classOf[KafkaJsonOutputConfig],
+    OutputTypes.hdfsfile.toString-> classOf[HDFSOutputConfig]
   )
 
   def getInputConfigClass(typeName: String): Class[_ <: BaseInputConfig] = {

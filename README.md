@@ -460,7 +460,7 @@ processes:
 
 | 配置项 | 默认值|是否必填 | 说明 |
 | :---- | :---- |:---- | :--- |
-| name| |是|节点名称，用于打印日志，无其他作用|
+| name| |是|节点名称，用于打印日志，定位问题|
 |type| |是| 固定值 jdbc|
 | driver| |是| 数据库 driver|
 | url| |是| 连接数据库的 url|
@@ -501,7 +501,7 @@ outputs:
 
 | 配置项 | 默认值|是否必填 | 说明 |
 | :---- | :---- |:---- | :--- |
-| name| |是|节点名称，用于打印日志，无其他作用|
+| name| |是|节点名称，用于打印日志，定位问题|
 |type| |是| 固定值 hive|
 | database| |是| 要保存到的 hive 库|
 | tables| |是|要输出的表，为 map 类型|
@@ -521,13 +521,68 @@ outputs:
       b_osp_app_area_analyze_total: b_osp_app_area_analyze_total
 ...
 ```
-##### 5.4.3 kafkaField 发送到 kafka
+
+##### 5.4.3 输出到 HDFS
 
 ###### 配置说明  
 
 | 配置项 | 默认值|是否必填 | 说明 |
 | :---- | :---- |:---- | :--- |
-| name| |是|节点名称，用于打印日志，无其他作用|
+| name| |是|节点名称，用于打印日志，定位问题|
+|type| |是| 固定值 hdfsfile|
+| srcName| |是|要保存的数据，必须使用上面定义的表名|
+| format| |是| 要输出的文件类型，暂时支持 csv, txt, lzo, json, parquet 这些类型|
+| path| |是|数据要保存的目录|
+| fs|\u0001 |否|保存成文件时的列分隔符，只针对 txt lzo 类型输出生效|
+
+
+###### demo
+
+```yaml
+...
+outputs:
+  - name: out1
+    type: hdfsfile
+    srcName: table1
+    format: csv # 保存为 csv
+    path: /user/osp/data/out1/${EVENT_DATE}
+
+  - name: out2 
+    type: hdfsfile
+    srcName: table2
+    format: txt # 保存为 txt，字段用逗号分隔
+    fs: ","
+    path: /user/osp/data/out2/${EVENT_DATE}  
+
+  - name: out3
+    type: hdfsfile
+    srcName: table3
+    format: lzo # 保存为 lzo，字段用逗号分隔
+    fs: ","
+    path: /user/osp/data/out3/${EVENT_DATE}  
+
+  - name: out4
+    type: hdfsfile
+    srcName: table4
+    format: json # 保存为 json
+    path: /user/osp/data/out4/${EVENT_DATE}  
+
+  - name: out5
+    type: hdfsfile
+    srcName: table5
+    format: parquet # 保存为 parquet
+    fs: ","
+    path: /user/osp/data/out5/${EVENT_DATE}  
+...
+```
+
+##### 5.4.4 kafkaField 发送到 kafka
+
+###### 配置说明  
+
+| 配置项 | 默认值|是否必填 | 说明 |
+| :---- | :---- |:---- | :--- |
+| name| |是|节点名称，用于打印日志，定位问题|
 |type| |是| 固定值 kafkaField|
 | srcName| |是| 要保存的 table|
 | brokers| |是| 目标 kafka brokers|
@@ -548,13 +603,13 @@ outputs:
     fs: ","
 ...
 ```
-##### 5.4.4 kafkaJson 发送到 kafka
+##### 5.4.5 kafkaJson 发送到 kafka
 
 ###### 配置说明  
 
 | 配置项 | 默认值|是否必填 | 说明 |
 | :---- | :---- |:---- | :--- |
-| name| |是|节点名称，用于打印日志，无其他作用|
+| name| |是|节点名称，用于打印日志，定位问题|
 |type| |是| 固定值 kafkaJson|
 | srcName| |是| 要保存的 table|
 | brokers| |是| 目标 kafka brokers|

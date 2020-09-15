@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.hellowzk</groupId>
     <artifactId>light-spark</artifactId>
-    <version>1.0.1-release</version>
+    <version>1.0.3-release</version>
     <packaging>pom</packaging>
     <!--<parent>
         <groupId>org.sonatype.oss</groupId>

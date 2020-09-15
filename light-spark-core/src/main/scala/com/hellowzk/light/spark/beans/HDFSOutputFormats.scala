@@ -1,4 +1,5 @@
 package com.hellowzk.light.spark.beans
+
 /**
  * <p>
  * 日期： 2020/5/19
@@ -14,5 +15,5 @@ package com.hellowzk.light.spark.beans
  **/
 object HDFSOutputFormats extends Enumeration {
   type HDFSOutputFormats = Value
-  val csv, txt, lzo, json = Value
+  val csv, txt, lzo, json, parquet = Value
 }

@@ -56,81 +56,6 @@ class HDFSUtils extends Logging {
    */
   def isDir(path: String)(implicit sc: SparkContext): Boolean = withFS(fs => fs.isDirectory(new Path(path)))
 
-  /**
-   * 保存 DataFrame 为 csv 类型
-   *
-   * @param df         DataFrame
-   * @param fullPath   fullPath
-   * @param partitions partitions
-   * @param tag        successTag
-   * @param sc         SparkContext
-   */
-  def saveAsCSV(df: DataFrame, fullPath: String, partitions: Int = 0, tag: String = null)(implicit sc: SparkContext): Unit = {
-    logger.info(s"try to save data to $fullPath")
-    save(fullPath, path => {
-      val part = if (partitions == 0)
-        df
-      else
-        df.repartition(partitions)
-      part.write.format("com.databricks.spark.csv").option(
-        "header", "true"
-      ).save(path)
-    }, successTag = tag)
-  }
-
-  /**
-   * 保存 DataFrame 为 csv 类型
-   *
-   * @param df         DataFrame
-   * @param fullPath   fullPath
-   * @param partitions partitions
-   * @param tag        successTag
-   * @param sc         SparkContext
-   */
-  def saveAsJSON(df: DataFrame, fullPath: String, partitions: Int = 0, tag: String = null)(implicit sc: SparkContext): Unit = {
-    logger.info(s"try to save data to $fullPath")
-    save(fullPath, path => {
-      val part = if (partitions == 0)
-        df
-      else
-        df.repartition(partitions)
-      part.toJSON.rdd.saveAsTextFile(path)
-    }, successTag = tag)
-  }
-
-  /**
-   * 保存数据
-   *
-   * @param path       要保存到的目标路径
-   * @param doSave     具体的保存方法
-   * @param overwrite  目标存在是否覆盖
-   * @param successTag 成功标志
-   * @param sc         SparkContext
-   */
-  private def save(path: String, doSave: String => Unit, overwrite: Boolean = true, successTag: String)(implicit sc: SparkContext): Unit = {
-    val dir: String = Paths.get(path).normalize.toString
-    Option(dir).filter(d => exists(d)).foreach(d => {
-      if (overwrite) {
-        logger.warn(s"already exists, try to purge")
-        remove(dir)
-        logger.warn(s"purged")
-      } else {
-        throw new IOException(s"target path already exisits: $dir")
-      }
-    })
-    doSave(path)
-    Option(dir).filter(d => !exists(d)).foreach(d => {
-      logger.warn("empty result set, try to create an empty result file")
-      touchz(d)
-    })
-    logger.info(s"saved at: $dir")
-    Option(successTag).foreach(tag => {
-      val tag = Paths.get(dir, successTag).normalize.toString
-      logger.info(s"success tag: $tag")
-      mkdir(tag)
-      logger.info(s"success tag created")
-    })
-  }
 
   /**
    * 创建目录
@@ -192,25 +117,13 @@ class HDFSUtils extends Logging {
    */
   def saveAsTXT(df: DataFrame, fullPath: String, fs: String = "\u0001", tag: String = null)(implicit sc: SparkContext): Unit = {
     save(fullPath, path => {
-      df.rdd.map(
-        _.toSeq
-      ).map(
-        _.map(f => {
-          if (f.isInstanceOf[BigDecimal] || f.isInstanceOf[java.math.BigDecimal])
-            f.formatted("%.2f")
-          else
-            f
-        })
-      ).map(s =>
-        s.mkString(fs)
-      ).saveAsTextFile(
-        fullPath
-      )
+      df.rdd.map(_.toSeq.mkString(fs))
+        .saveAsTextFile(path)
     }, successTag = tag)
   }
 
   /**
-   * 保存 DataFrame 为 lzo 类型
+   * 保存 DataFrame 为 txt lzo 类型
    *
    * @param df       DataFrame
    * @param fullPath fullPath
@@ -220,19 +133,102 @@ class HDFSUtils extends Logging {
    */
   def saveAsLZO(df: DataFrame, fullPath: String, fs: String = "\u0001", tag: String = null)(implicit sc: SparkContext): Unit = {
     save(fullPath, path => {
-      val saveRDD = df.rdd.map(
-        _.toSeq
-      ).map(
-        _.map(f => {
-          if (f.isInstanceOf[BigDecimal] || f.isInstanceOf[java.math.BigDecimal])
-            f.formatted("%.2f")
-          else
-            f
-        })
-      ).map(s =>
-        s.mkString(fs)
-      ).saveAsTextFile(fullPath, classOf[LzopCodec])
+      df.rdd.map(_.toSeq.mkString(fs))
+        .saveAsTextFile(path, classOf[LzopCodec])
     }, successTag = tag)
+  }
+
+  /**
+   * 保存 DataFrame 为 csv 类型
+   *
+   * @param df         DataFrame
+   * @param fullPath   fullPath
+   * @param partitions partitions
+   * @param tag        successTag
+   * @param sc         SparkContext
+   */
+  def saveAsCSV(df: DataFrame, fullPath: String, partitions: Int = 0, tag: String = null)(implicit sc: SparkContext): Unit = {
+    save(fullPath, path => {
+      val part = if (partitions == 0)
+        df
+      else
+        df.repartition(partitions)
+      part.write.format("com.databricks.spark.csv").option(
+        "header", "true"
+      ).save(path)
+    }, successTag = tag)
+  }
+
+  /**
+   * 保存 DataFrame 为 json 类型
+   *
+   * @param df         DataFrame
+   * @param fullPath   fullPath
+   * @param partitions partitions
+   * @param tag        successTag
+   * @param sc         SparkContext
+   */
+  def saveAsJSON(df: DataFrame, fullPath: String, partitions: Int = 0, tag: String = null)(implicit sc: SparkContext): Unit = {
+    save(fullPath, path => {
+      val part = if (partitions == 0)
+        df
+      else
+        df.repartition(partitions)
+      part.toJSON.rdd.saveAsTextFile(path)
+    }, successTag = tag)
+  }
+
+  /**
+   * 保存 DataFrame 为 parquet 类型
+   *
+   * @param df         DataFrame
+   * @param fullPath   fullPath
+   * @param partitions partitions
+   * @param tag        successTag
+   * @param sc         SparkContext
+   */
+  def saveAsParquet(df: DataFrame, fullPath: String, partitions: Int = 0, tag: String = null)(implicit sc: SparkContext): Unit = {
+    save(fullPath, path => {
+      val part = if (partitions == 0)
+        df
+      else
+        df.repartition(partitions)
+      part.write.parquet(path)
+    }, successTag = tag)
+  }
+
+  /**
+   * 保存数据
+   *
+   * @param path       要保存到的目标路径
+   * @param doSave     具体的保存方法
+   * @param overwrite  目标存在是否覆盖
+   * @param successTag 成功标志
+   * @param sc         SparkContext
+   */
+  private def save(path: String, doSave: String => Unit, overwrite: Boolean = true, successTag: String)(implicit sc: SparkContext): Unit = {
+    val dir: String = Paths.get(path).normalize.toString
+    Option(dir).filter(d => exists(d)).foreach(d => {
+      if (overwrite) {
+        logger.warn(s"already exists, try to purge")
+        remove(dir)
+        logger.warn(s"purged")
+      } else {
+        throw new IOException(s"target path already exisits: $dir")
+      }
+    })
+    doSave(path)
+    Option(dir).filter(d => !exists(d)).foreach(d => {
+      logger.warn("empty result set, try to create an empty result file")
+      touchz(d)
+    })
+    logger.info(s"saved at: $dir")
+    Option(successTag).foreach(tag => {
+      val tag = Paths.get(dir, successTag).normalize.toString
+      logger.info(s"success tag: $tag")
+      mkdir(tag)
+      logger.info(s"success tag created")
+    })
   }
 
   /**

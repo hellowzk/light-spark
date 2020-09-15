@@ -31,6 +31,10 @@ trait BaseWorker extends Logging {
     variables = JSON.parseObject(str, classOf[java.util.HashMap[String, String]])
   }
 
+  protected def getVariableStr()(implicit ss: SparkSession): String = {
+    ss.sparkContext.getConf.get("com.hellowzk.light.spark.variables")
+  }
+
   /**
    * spark table 转 RDD
    *

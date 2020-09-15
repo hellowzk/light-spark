@@ -5,7 +5,7 @@
     <parent>
         <artifactId>light-spark</artifactId>
         <groupId>com.github.hellowzk</groupId>
-        <version>1.0.1-release</version>
+        <version>1.0.3-release</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>com.github.hellowzk</groupId>
             <artifactId>light-spark-core_2.4</artifactId>
-            <version>1.0.2-release</version>
+            <version>1.0.3-release</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
