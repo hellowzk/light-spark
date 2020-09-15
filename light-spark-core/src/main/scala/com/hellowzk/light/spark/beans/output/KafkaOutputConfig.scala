@@ -1,6 +1,7 @@
 package com.hellowzk.light.spark.beans.output
 
 import scala.beans.BeanProperty
+
 /**
  * <p>
  * 日期： 2020/5/19

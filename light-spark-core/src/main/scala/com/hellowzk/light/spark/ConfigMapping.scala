@@ -4,6 +4,7 @@ import com.hellowzk.light.spark.beans.input._
 import com.hellowzk.light.spark.beans.output._
 import com.hellowzk.light.spark.beans.transform.{BaseTransformConfig, CustomTransformConfig, SQLTransformConfig}
 import com.hellowzk.light.spark.beans.{InputTypes, OutputTypes, ProcessTypes}
+
 /**
  * <p>
  * 日期： 2019/11/22
@@ -39,7 +40,7 @@ object ConfigMapping {
     OutputTypes.jdbc.toString -> classOf[JDBCOutputConfig],
     OutputTypes.kafkaField.toString -> classOf[KafkaFieldOutputConfig],
     OutputTypes.kafkaJson.toString -> classOf[KafkaJsonOutputConfig],
-    OutputTypes.hdfsfile.toString-> classOf[HDFSOutputConfig]
+    OutputTypes.hdfsfile.toString -> classOf[HDFSOutputConfig]
   )
 
   def getInputConfigClass(typeName: String): Class[_ <: BaseInputConfig] = {

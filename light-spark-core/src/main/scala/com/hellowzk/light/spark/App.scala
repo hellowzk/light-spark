@@ -12,6 +12,7 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
 import scala.collection.JavaConversions._
+
 /**
  * <p>
  * 日期： 2019/11/22

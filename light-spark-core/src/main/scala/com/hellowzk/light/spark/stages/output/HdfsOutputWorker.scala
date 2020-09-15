@@ -2,7 +2,6 @@ package com.hellowzk.light.spark.stages.output
 
 import com.hellowzk.light.spark.beans.output.HDFSOutputConfig
 import com.hellowzk.light.spark.beans.{BaseConfig, HDFSOutputFormats}
-import com.hellowzk.light.spark.constants.SysConstants
 import com.hellowzk.light.spark.stages.BaseWorker
 import com.hellowzk.light.spark.uitils.HDFSUtils
 import org.apache.spark.sql.SparkSession
@@ -27,7 +26,6 @@ object HdfsOutputWorker {
 class HdfsOutputWorker extends BaseWorker {
   override def process(config: BaseConfig)(implicit ss: SparkSession): Unit = {
     val item = config.asInstanceOf[HDFSOutputConfig]
-    val constants = SysConstants.apply
     var df = ss.table(item.srcName)
     Option(item.partations).filter(part => part > 0).foreach(part => df = df.repartition(part))
     logger.info(s"try to save to ${item.path}.")

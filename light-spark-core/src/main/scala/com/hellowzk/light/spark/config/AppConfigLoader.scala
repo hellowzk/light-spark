@@ -3,8 +3,8 @@ package com.hellowzk.light.spark.config
 import com.alibaba.fastjson.serializer.SerializeFilter
 import com.alibaba.fastjson.{JSON, JSONObject}
 import com.hellowzk.light.spark.ConfigMapping
-import com.hellowzk.light.spark.beans.transform.BaseTransformConfig
 import com.hellowzk.light.spark.beans._
+import com.hellowzk.light.spark.beans.transform.BaseTransformConfig
 import com.hellowzk.light.spark.constants.{AppConstants, SysConstants}
 import com.hellowzk.light.spark.uitils.{AppUtil, ConfigException, DateUtil, ReflectUtils}
 import org.apache.commons.collections4.CollectionUtils
@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
+
 /**
  * <p>
  * 日期： 2020/5/19

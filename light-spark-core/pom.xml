@@ -6,7 +6,7 @@
 
     <groupId>com.github.hellowzk</groupId>
     <artifactId>light-spark-core_2.4</artifactId>
-	<name>Light Spark</name>
+    <name>Light Spark</name>
     <version>1.0.3-release</version>
 
     <url>https://github.com/hellowzk/light-spark</url>

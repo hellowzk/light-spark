@@ -3,6 +3,7 @@ package com.hellowzk.light.spark.beans.transform
 import com.hellowzk.light.spark.stages.Transform.SQLTransformWorker
 
 import scala.beans.BeanProperty
+
 /**
  * <p>
  * 日期： 2020/5/19

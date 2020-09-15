@@ -39,7 +39,7 @@ Light-Spark 开发脚架
 <dependency>
     <groupId>com.github.hellowzk</groupId>
     <artifactId>light-spark-core_2.2</artifactId>
-    <version>1.0.2-release</version>
+    <version>1.0.3-release</version>
 </dependency>
 ```
 #### 针对 Spark 2.3.x
@@ -47,7 +47,7 @@ Light-Spark 开发脚架
 <dependency>
     <groupId>com.github.hellowzk</groupId>
     <artifactId>light-spark-core_2.3</artifactId>
-    <version>1.0.2-release</version>
+    <version>1.0.3-release</version>
 </dependency>
 ```
 #### 针对 Spark 2.4.x
@@ -55,7 +55,7 @@ Light-Spark 开发脚架
 <dependency>
     <groupId>com.github.hellowzk</groupId>
     <artifactId>light-spark-core_2.4</artifactId>
-    <version>1.0.2-release</version>
+    <version>1.0.3-release</version>
 </dependency>
 ```
 ### 4.2 依赖配置

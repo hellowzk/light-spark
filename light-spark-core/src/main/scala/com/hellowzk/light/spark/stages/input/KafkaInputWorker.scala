@@ -14,6 +14,7 @@ import org.apache.spark.streaming.kafka010._
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
+
 /**
  * <p>
  * 日期： 2020/7/10

@@ -5,6 +5,7 @@ import com.hellowzk.light.spark.beans.input.FileInputConfig
 import com.hellowzk.light.spark.stages.BaseWorker
 import com.hellowzk.light.spark.uitils.{AppUtil, HDFSUtils}
 import org.apache.spark.sql.SparkSession
+
 /**
  * <p>
  * 日期： 2020/7/10

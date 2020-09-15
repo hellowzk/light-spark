@@ -7,6 +7,7 @@ import com.alibaba.fastjson.serializer.SerializeFilter
 import com.hellowzk.light.spark.beans.BaseConfig
 
 import scala.collection.JavaConversions._
+
 /**
  * <p>
  * 日期： 2019/11/22
