@@ -2,7 +2,6 @@ package com.hellowzk.light.spark.stages.input
 
 import com.hellowzk.light.spark.beans.BaseConfig
 import com.hellowzk.light.spark.beans.input.FileInputConfig
-import com.hellowzk.light.spark.stages.BaseWorker
 import com.hellowzk.light.spark.uitils.{AppUtil, HDFSUtils}
 import org.apache.spark.sql.SparkSession
 
@@ -23,7 +22,7 @@ object HDFSTxtInputWorker {
   def apply(): HDFSTxtInputWorker = new HDFSTxtInputWorker()
 }
 
-class HDFSTxtInputWorker extends BaseWorker {
+class HDFSTxtInputWorker extends HDFSInputWorker {
   /**
    * 加载数据
    *

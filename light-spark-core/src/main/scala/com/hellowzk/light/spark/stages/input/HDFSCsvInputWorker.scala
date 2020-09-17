@@ -1,7 +1,6 @@
 package com.hellowzk.light.spark.stages.input
 
 import com.hellowzk.light.spark.beans.BaseConfig
-import com.hellowzk.light.spark.stages.BaseWorker
 import org.apache.spark.sql.SparkSession
 
 /**
@@ -17,7 +16,7 @@ import org.apache.spark.sql.SparkSession
  * 作者： zhaokui
  *
  **/
-class HDFSCsvInputWorker extends BaseWorker {
+class HDFSCsvInputWorker extends HDFSInputWorker {
   /**
    * 加载数据
    *

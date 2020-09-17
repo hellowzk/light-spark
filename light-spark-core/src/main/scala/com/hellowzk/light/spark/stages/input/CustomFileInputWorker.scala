@@ -2,7 +2,6 @@ package com.hellowzk.light.spark.stages.input
 
 import com.hellowzk.light.spark.beans.BaseConfig
 import com.hellowzk.light.spark.beans.input.CustomInputConfig
-import com.hellowzk.light.spark.stages.BaseWorker
 import com.hellowzk.light.spark.stages.custom.CustomBaseInput
 import com.hellowzk.light.spark.uitils.ReflectUtils
 import org.apache.spark.sql.SparkSession
@@ -20,7 +19,7 @@ import org.apache.spark.sql.SparkSession
  * 作者： zhaokui
  *
  **/
-class CustomFileInputWorker extends BaseWorker {
+class CustomFileInputWorker extends HDFSInputWorker {
   /**
    * 加载数据
    *
@@ -29,7 +28,9 @@ class CustomFileInputWorker extends BaseWorker {
    */
   override def process(bean: BaseConfig)(implicit ss: SparkSession): Unit = {
     val item = bean.asInstanceOf[CustomInputConfig]
-    val rdd = ss.sparkContext.textFile(item.path)
+    // 如果数据 path 不存在，且配置定义该数据允许为空，则给一个空的 rdd
+    val rdd = loadAsText(item.path, item.nullable)(ss.sparkContext)
+
     ReflectUtils.apply.getInstance[CustomBaseInput](item.clazz).process(rdd, item.getName)
     afterProcess(item)
   }
