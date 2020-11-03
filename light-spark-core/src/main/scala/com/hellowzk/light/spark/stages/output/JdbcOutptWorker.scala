@@ -43,6 +43,7 @@ class JdbcOutptWorker extends BaseWorker {
       val dfWriter = ss.table(src).write.mode(item.mode).format("jdbc")
       filterd.put("dbtable", dist)
       dfWriter.options(filterd).save()
+      logger.info(s"jdbc output, save '$src' to '$dist' success.")
     }
   }
 

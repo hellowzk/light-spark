@@ -31,7 +31,7 @@ class HiveOutputWorker extends BaseWorker {
     item.tables.foreach { case (src, dist) =>
       // ss.catalog.refreshTable(s"${item.database}.$dist")
       ss.table(src).write.mode(item.mode).format("Hive").saveAsTable(s"${item.database}.$dist")
-      logger.info(s"outputs, saved $src to ${item.database}.$dist success.")
+      logger.info(s"hive output, saved $src to ${item.database}.$dist success.")
     }
   }
 }
