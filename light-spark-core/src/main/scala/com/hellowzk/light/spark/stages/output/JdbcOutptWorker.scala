@@ -38,12 +38,15 @@ class JdbcOutptWorker extends BaseWorker {
         logger.info(s"use jdbc opts - $key -> $v")
       }
     }
+
     filterd.remove("tables")
     item.tables.foreach { case (src, dist) =>
+      logger.info(s"jdbc output, start save '$src' to '$dist'...")
+      val t1 = System.currentTimeMillis()
       val dfWriter = ss.table(src).write.mode(item.mode).format("jdbc")
       filterd.put("dbtable", dist)
       dfWriter.options(filterd).save()
-      logger.info(s"jdbc output, save '$src' to '$dist' success.")
+      logger.info(s"jdbc output, save '$src' to '$dist' success cost ${System.currentTimeMillis() - t1}.")
     }
   }
 
